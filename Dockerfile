@@ -16,6 +16,8 @@ RUN mkdir /var/run/clamav && \
     chown clamav:clamav /var/run/clamav && \
     chmod 750 /var/run/clamav && \
     sed -i 's/^Foreground .*$/Foreground true/g' /etc/clamav/clamd.conf && \
+    sed -i 's/^MaxFileSize .*$/MaxFileSize 50M/g' /etc/clamav/clamd.conf && \
+    sed -i 's/^StreamMaxLength .*$/StreamMaxLength 50M/g' /etc/clamav/clamd.conf && \
     echo "TCPSocket 3310" >> /etc/clamav/clamd.conf && \
     sed -i 's/^Foreground .*$/Foreground true/g' /etc/clamav/freshclam.conf
 
