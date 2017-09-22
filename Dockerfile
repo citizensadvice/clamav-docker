@@ -17,11 +17,6 @@ RUN set -x \
     && rm -r "$GNUPGHOME" /usr/local/bin/tini.asc \
     && chmod +x /usr/local/bin/tini
 
-RUN wget -O /var/lib/clamav/main.cvd http://database.clamav.net/main.cvd && \
-    wget -O /var/lib/clamav/daily.cvd http://database.clamav.net/daily.cvd && \
-    wget -O /var/lib/clamav/bytecode.cvd http://database.clamav.net/bytecode.cvd && \
-    chown clamav:clamav /var/lib/clamav/*.cvd
-
 RUN mkdir /var/run/clamav && \
     chown clamav:clamav /var/run/clamav && \
     chmod 750 /var/run/clamav
@@ -32,12 +27,12 @@ ADD bootstrap.sh /
 ADD clamd.conf.template /etc/clamav/
 ADD freshclam.conf.template /etc/clamav/
 
+RUN freshclam --verbose
+
 ENV MAX_THREADS 12
 ENV MAX_CONNECTION_QUEUE_LENGTH 15
 ENV MAX_QUEUE=100
 ENV MAX_SCAN_SIZE 100M
 ENV MAX_FILE_SIZE 100M
-
-#ENTRYPOINT ["/usr/local/bin/tini", "-g", "--"]
 
 CMD ["/bootstrap.sh"]
