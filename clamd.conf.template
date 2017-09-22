@@ -79,7 +79,7 @@ StatsEnabled false
 StatsPEDisabled true
 StatsHostID auto
 StatsTimeout 10
-StreamMaxLength 25M
+StreamMaxLength ${MAX_STREAM_LENGTH}
 #LogFile /dev/stdout
 LogTime true
 LogFileUnlock false
