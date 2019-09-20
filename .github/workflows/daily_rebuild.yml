@@ -15,6 +15,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        # Update latest version definition script
         cd $GITHUB_WORKSPACE
 
         # ClamAV publishes version numbers through DNS
@@ -25,18 +26,24 @@ jobs:
         if [[ $(nslookup -type=TXT current.cvd.clamav.net) =~ $regex ]]
         then 
           set $current_version = ${BASH_REMATCH[1]}
+          
+          echo "$current_version" > ./current.cvd.clamav.net.txt
+
+          echo "Updating to cvd $current_version"
+
+          # Configure git to run as an infrastructure user
+          git config --global credential.helper store
+          echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com\n" > "$HOME/.git-credentials"
+          git config --global user.email "ca-devops@citizensadvice.org.uk"
+          git config --global user.name "Citizens Advice GitHub Action"
+
+          git checkout master
+
+          # Push the change
+          git add ./current.cvd.clamav.net.txt
+          git commit -a -m "Version update to $current_version"
+          git push
+        else
+          echo "Couldn't fetch clamav signature versions."
+          exit 1
         fi
-        echo "$current_version" > ./current.cvd.clamav.net.txt
-
-        echo "Updating to cvd $current_version"
-
-        # Configure git to run as an infrastructure user
-        git config --global credential.helper store
-        echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com\n" > "$HOME/.git-credentials"
-        git config --global user.email "ca-devops@citizensadvice.org.uk"
-        git config --global user.name "Citizens Advice GitHub Action"
-
-        # Push the change
-        git add ./current.cvd.clamav.net.txt
-        git commit -a -m "Version update to $current_version"
-        git push
