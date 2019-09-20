@@ -19,7 +19,7 @@ jobs:
         # https://github.blog/2012-09-21-easier-builds-and-deployments-using-git-over-https-and-oauth/#using-oauth-with-git
         cd $GITHUB_WORKSPACE
         git init
-        git pull https://${GITHUB_TOKEN}@github.com/citizensadvice/clamav-docker.git
+        git pull https://${GITHUB_TOKEN}:x-oauth-basic@github.com/citizensadvice/clamav-docker.git
         git checkout master
           
         # ClamAV publishes version numbers through DNS
