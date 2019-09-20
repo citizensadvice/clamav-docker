@@ -2,7 +2,7 @@ name: Daily rebuild of ClamAV docker image with latest definitions
 
 on:
   schedule:
-  - cron: "*/15 * * * *"
+  - cron: "0 0 * * *"
 
 jobs:
   daily_rebuild:
@@ -28,11 +28,13 @@ jobs:
         fi
         echo "$current_version" > ./current.cvd.clamav.net.txt
 
+        echo "Updating to cvd $current_version"
+
         # Configure git to run as an infrastructure user
         git config --global credential.helper store
         echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com\n" > "$HOME/.git-credentials"
         git config --global user.email "ca-devops@citizensadvice.org.uk"
-        git config --glboal user.name "Citizens Advice GitHub Action"
+        git config --global user.name "Citizens Advice GitHub Action"
 
         # Push the change
         git add ./current.cvd.clamav.net.txt
