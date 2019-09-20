@@ -2,7 +2,7 @@ name: Daily rebuild of ClamAV docker image with latest definitions
 
 on:
   schedule:
-  - cron: "*/15 * * * *"
+  - cron: "0 0 * * *"
 
 jobs:
   daily_rebuild:
@@ -27,6 +27,8 @@ jobs:
           set $current_version = ${BASH_REMATCH[1]}
         fi
         echo "$current_version" > ./current.cvd.clamav.net.txt
+
+        echo "Updating to cvd $current_version"
 
         # Configure git to run as an infrastructure user
         git config --global credential.helper store
