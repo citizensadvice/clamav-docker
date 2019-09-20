@@ -2,7 +2,7 @@ name: Daily rebuild of ClamAV docker image with latest definitions
 
 on:
   schedule:
-  - cron: "*/15 * * * *"
+  - cron: "0 0 1 * *"
 
 jobs:
   daily_rebuild:
