@@ -1,0 +1,40 @@
+name: Daily rebuild of ClamAV docker image with latest definitions
+
+on:
+  schedule:
+  - cron: "*/15 * * * *"
+
+jobs:
+  daily_rebuild:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@master
+    - name: Update latest version definition
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cd $GITHUB_WORKSPACE
+
+        # ClamAV publishes version numbers through DNS
+        # We publish that version number to the repository
+        # This is also used in the suggested local mirror update scripts
+        # https://www.clamav.net/documents/private-local-mirrors
+        regex="current\.cvd\.clamav\.net.+text.*=.*\"(.*)\""
+        if [[ $(nslookup -type=TXT current.cvd.clamav.net) =~ $regex ]]
+        then 
+          set $current_version = ${BASH_REMATCH[1]}
+        fi
+        echo "$current_version" > ./current.cvd.clamav.net.txt
+
+        # Configure git to run as an infrastructure user
+        git config --global credential.helper store
+        echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com\n" > "$HOME/.git-credentials"
+        git config --global user.email "ca-devops@citizensadvice.org.uk"
+        git config --glboal user.name "Citizens Advice GitHub Action"
+
+        # Push the change
+        git add ./current.cvd.clamav.net.txt
+        git commit -a -m "Version update to $current_version"
+        git push
