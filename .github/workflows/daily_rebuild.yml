@@ -32,7 +32,7 @@ jobs:
         git config --global credential.helper store
         echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com\n" > "$HOME/.git-credentials"
         git config --global user.email "ca-devops@citizensadvice.org.uk"
-        git config --glboal user.name "Citizens Advice GitHub Action"
+        git config --global user.name "Citizens Advice GitHub Action"
 
         # Push the change
         git add ./current.cvd.clamav.net.txt
