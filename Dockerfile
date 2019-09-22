@@ -18,7 +18,10 @@ RUN set -x \
     && chmod +x /usr/local/bin/tini
 
 RUN mkdir /var/run/clamav && \
-    chown clamav:clamav /var/run/clamav && \
+    touch /etc/clamav/clamd.conf && \
+    touch /etc/clamav/freshclam.conf && \
+    chown -R clamav:clamav /var/run/clamav /etc/clamav && \
+    chmod 640 /etc/clamav/*.conf && \
     chmod 750 /var/run/clamav
 
 EXPOSE 3310
@@ -35,5 +38,7 @@ ENV MAX_QUEUE=100
 ENV MAX_SCAN_SIZE 100M
 ENV MAX_FILE_SIZE 100M
 ENV MAX_STREAM_LENGTH 100M
+
+USER clamav
 
 CMD ["/bootstrap.sh"]
