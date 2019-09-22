@@ -36,7 +36,7 @@ jobs:
           # Push the change
           git add ./current.cvd.clamav.net.txt
           git commit -a -m "Version update to $current_version"
-          git push --set-upstream origin HEAD:master
+          git -c http.extraheader="AUTHORIZATION: basic $GITHUB_TOKEN" push --set-upstream origin HEAD:master
         else
           echo "Couldn't fetch clamav signature versions."
           exit 1
