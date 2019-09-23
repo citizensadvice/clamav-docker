@@ -1,4 +1,4 @@
-FROM debian:jessie-slim
+FROM krallin/ubuntu-tini:xenial
 
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -6,19 +6,11 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV TINI_VERSION v0.14.0
-
-RUN set -x \
-    && curl -fSL "https://github.com/krallin/tini/releases/download/$TINI_VERSION/tini-static" -o /usr/local/bin/tini \
-    && curl -fSL "https://github.com/krallin/tini/releases/download/$TINI_VERSION/tini-static.asc" -o /usr/local/bin/tini.asc \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 6380DC428747F6C393FEACA59A84159D7001A4E5 \
-    && gpg --batch --verify /usr/local/bin/tini.asc /usr/local/bin/tini \
-    && rm -r "$GNUPGHOME" /usr/local/bin/tini.asc \
-    && chmod +x /usr/local/bin/tini
-
 RUN mkdir /var/run/clamav && \
-    chown clamav:clamav /var/run/clamav && \
+    touch /etc/clamav/clamd.conf && \
+    touch /etc/clamav/freshclam.conf && \
+    chown -R clamav:clamav /var/run/clamav /etc/clamav && \
+    chmod 640 /etc/clamav/*.conf && \
     chmod 750 /var/run/clamav
 
 EXPOSE 3310
@@ -35,5 +27,10 @@ ENV MAX_QUEUE=100
 ENV MAX_SCAN_SIZE 100M
 ENV MAX_FILE_SIZE 100M
 ENV MAX_STREAM_LENGTH 100M
+
+RUN for i in `find / -user clamav`; do chown 1000 $i; done && \
+    usermod -u 1000 clamav
+
+USER 1000
 
 CMD ["/bootstrap.sh"]
