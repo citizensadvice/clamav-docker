@@ -19,6 +19,7 @@ jobs:
         git init
         git pull https://x-access-token:${GITHUB_TOKEN}@github.com/citizensadvice/clamav-docker.git
         git checkout master
+        git remote add origin https://x-access-token:${GITHUB_TOKEN}@github.com/citizensadvice/clamav-docker.git
         
         # ClamAV publishes version numbers through DNS
         # We publish that version number to the repository
@@ -40,7 +41,7 @@ jobs:
           # Push the change
           git add ./current.cvd.clamav.net.txt
           git commit -a -m "Version update to $current_version"
-          git push
+          git push --set-upstream origin master
         else
           echo "Couldn't fetch clamav signature versions."
           exit 1
