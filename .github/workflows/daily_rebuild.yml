@@ -2,7 +2,7 @@ name: Daily rebuild of ClamAV docker image with latest definitions
 
 on:
   schedule:
-  - cron: "* * 1 * *"
+  - cron: "*/15 * * * *"
 
 jobs:
   daily_rebuild:
@@ -10,13 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@master
     - name: Update latest version definition
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         # Update latest version definition script
         cd $GITHUB_WORKSPACE
+        git init
+        git pull https://x-access-token:${GITHUB_TOKEN}@github.com/citizensadvice/clamav-docker.git
+        git checkout master
         
         # ClamAV publishes version numbers through DNS
         # We publish that version number to the repository
@@ -38,7 +40,7 @@ jobs:
           # Push the change
           git add ./current.cvd.clamav.net.txt
           git commit -a -m "Version update to $current_version"
-          git -c http.extraheader="AUTHORIZATION: token $GITHUB_TOKEN" push --set-upstream origin HEAD:master
+          git push --set-upstream origin HEAD:master
         else
           echo "Couldn't fetch clamav signature versions."
           exit 1
