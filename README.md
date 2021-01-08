@@ -1,6 +1,6 @@
 # About this Repo
 
-This is the Citizens Advice ClamAV docker image
+This is the Citizens Advice ClamAV docker image. The virus definitions are updated daily. The latest docker image can be pulled from `public.ecr.aws/citizensadvice/clamav:latest`
 
 To test:
 
