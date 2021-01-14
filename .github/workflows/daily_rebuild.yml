@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Update latest version definition
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.JENKINS_DEVOPS_GITHUB_TOKEN }}
       run: |
         # Update latest version definition script
         cd $GITHUB_WORKSPACE
