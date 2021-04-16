@@ -33,7 +33,7 @@ jobs:
           echo "Updating to cvd $current_version"
 
           # Configure git to run as an infrastructure user
-          git config --global user.email "ca-devops@citizensadvice.org.uk"
+          git config --global user.email "jenkins@citizensadvice.org.uk"
           git config --global user.name "Citizens Advice GitHub Action"
 
           git checkout master
