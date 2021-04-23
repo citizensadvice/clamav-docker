@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Update latest version definition
       env:
-        GITHUB_TOKEN: ${{ secrets.JENKINS_DEVOPS_GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.CITIZENSADVICE_CLAMAV_GITHUB_TOKEN }}
       run: |
         # Update latest version definition script
         cd $GITHUB_WORKSPACE
@@ -32,8 +32,8 @@ jobs:
           echo "$current_version" > ./current.cvd.clamav.net.txt
           echo "Updating to cvd $current_version"
 
-          # Configure git to run as an infrastructure user
-          git config --global user.email "jenkins@citizensadvice.org.uk"
+          # Configure git to push using the citizensadvice-clamav user
+          git config --global user.email "83002696+citizensadvice-clamav@users.noreply.github.com"
           git config --global user.name "Citizens Advice GitHub Action"
 
           git checkout master
