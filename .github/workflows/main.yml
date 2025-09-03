@@ -22,7 +22,7 @@ jobs:
       id: extract_repo_name
     - name: Docker meta
       id: docker_meta
-      uses: crazy-max/ghaction-docker-meta@v1
+      uses: crazy-max/ghaction-docker-meta@v5
       with:
         images: public.ecr.aws/citizensadvice/${{ steps.extract_repo_name.outputs.repo_name }}
         tag-sha: true
