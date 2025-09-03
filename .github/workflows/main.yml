@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v5
     - name: Extract repo name
       shell: bash
       run: echo "##[set-output name=repo_name;]$(echo ${GITHUB_REPOSITORY} | sed "s/.*\///g" | sed "s/-docker$//")"
