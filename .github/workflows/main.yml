@@ -21,16 +21,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v5
 
-    - name: Extract repo name
-      shell: bash
-      run: echo "repo_name=$(echo ${GITHUB_REPOSITORY} | sed "s/.*\///g" | sed "s/-docker$//") | tee -a $GITHUB_OUTPUT"
-      id: extract_repo_name
-
     - name: Docker meta
       id: docker_meta
       uses: crazy-max/ghaction-docker-meta@v5
       with:
-        images: public.ecr.aws/citizensadvice/${{ steps.extract_repo_name.outputs.repo_name }}
+        images: public.ecr.aws/citizensadvice/clamav
         tags: type=sha
 
     - name: Configure AWS Credentials
