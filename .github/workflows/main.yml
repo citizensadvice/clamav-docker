@@ -36,7 +36,7 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v5
       with:
-        aws-region: eu-west-1
+        aws-region: us-east-1 # ECR Public can only be logged into from the us-east-1 region.
 
     - name: ECR login
       id: ecr-login
