@@ -9,6 +9,7 @@ on:
       - "v[0-9]*"
     tags:
       - v*
+  workflow_dispatch:
 
 jobs:
   build:
