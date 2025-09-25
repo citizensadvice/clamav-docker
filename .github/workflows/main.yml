@@ -26,7 +26,9 @@ jobs:
       uses: crazy-max/ghaction-docker-meta@v5
       with:
         images: public.ecr.aws/citizensadvice/clamav
-        tags: type=sha
+        tags: |
+          type=sha
+          type=ref
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v5
