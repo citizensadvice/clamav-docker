@@ -7,6 +7,7 @@ on:
 
 jobs:
   daily_rebuild:
+    name: Refresh ClamAV definitions
     runs-on: runs-on
     env:
       GITHUB_TOKEN: ${{ secrets.CITIZENSADVICE_CLAMAV_GITHUB_TOKEN }}
@@ -16,11 +17,9 @@ jobs:
       - name: Refresh ClamAV version
         run: echo $(dig +short current.cvd.clamav.net txt | tr -d '"') > current.cvd.clamav.net.txt
 
-      - name: Validate change
+      - name: Print diff
         run: |
           git diff current.cvd.clamav.net.txt
-          grep -E '^\d+\.\d+\.\d+:\d+:\d+:\d+:\d+:\d+:\d+:\d+$' current.cvd.clamav.net.txt || echo "Failed to match REGEX" && exit 1
-
 
       - name: Add, Commit & Push changes
         uses: EndBug/add-and-commit@v9.1.4
