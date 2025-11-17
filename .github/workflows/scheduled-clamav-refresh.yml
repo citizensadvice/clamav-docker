@@ -1,4 +1,4 @@
-name: Daily rebuild of ClamAV docker image with latest definitions
+name: Daily ClamAV Version Refresh
 
 on:
   schedule:
@@ -29,3 +29,6 @@ jobs:
           message: "Daily rebuild - update ClamAV definitions"
           add: "current.cvd.clamav.net.txt"
           push: true
+
+      - name: Build and push Docker image
+        uses: ./.github/workflows/build-and-push.yml

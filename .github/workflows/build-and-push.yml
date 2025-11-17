@@ -1,15 +1,8 @@
 name: Build and publish to public ECR
 
 on:
-  push:
-    branches:
-      - master
-      - main
-      - "[0-9]*"
-      - "v[0-9]*"
-    tags:
-      - v*
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   build:
