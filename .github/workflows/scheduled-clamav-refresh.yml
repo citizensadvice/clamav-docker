@@ -34,3 +34,4 @@ jobs:
     name: Build and Push Docker Image
     needs: daily_refresh
     uses: ./.github/workflows/build-and-push.yml
+    secrets: inherit
