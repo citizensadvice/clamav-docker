@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  daily_rebuild:
+  daily_refresh:
     name: Refresh ClamAV definitions
     runs-on: runs-on
     env:
@@ -20,8 +20,7 @@ jobs:
       - name: Print diff & validate
         run: |
           git diff current.cvd.clamav.net.txt
-          grep -Eqx '^\d+\.\d+\.\d+:\d+:\d+:\d+:\d+:\d+:\d+:\d+$' current.cvd.clamav.net.txt || echo 'REGEX PATTERN FAILED TO MATCH'
-
+          grep -Eqx '^\d+\.\d+\.\d+:\d+:\d+:\d+:\d+:\d+:\d+:\d+$' current.cvd.clamav.net.txt || echo 'REGEX PATTERN FAILED TO MATCH' && exit 1
 
       - name: Add, Commit & Push changes
         uses: EndBug/add-and-commit@v9.1.4
@@ -32,5 +31,7 @@ jobs:
           add: "current.cvd.clamav.net.txt"
           push: true
 
-      - name: Build and push Docker image
-        uses: ./.github/workflows/build-and-push.yml
+  docker_build:
+    name: Build and Push Docker Image
+    needs: daily_refresh
+    uses: ./.github/workflows/build-and-push.yml
