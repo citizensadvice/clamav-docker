@@ -20,7 +20,8 @@ jobs:
       - name: Print diff & validate
         run: |
           git diff current.cvd.clamav.net.txt
-          grep -Eqx '^[0-9]+\.[0-9]+\.[0-9]+:[0-9]+:[0-9]+:[0-9]+:[0-9]+:[0-9]+:[0-9]+:[0-9]+$' current.cvd.clamav.net.txt || echo 'REGEX PATTERN FAILED TO MATCH' && exit 1
+          cat current.cvd.clamav.net.txt
+          grep -Eqx '^\d+\.\d+\.\d+:\d+:\d+:\d+:\d+:\d+:\d+:\d+$' current.cvd.clamav.net.txt || echo 'REGEX PATTERN FAILED TO MATCH' && exit 1
 
       - name: Add, Commit & Push changes
         uses: EndBug/add-and-commit@v9.1.4
