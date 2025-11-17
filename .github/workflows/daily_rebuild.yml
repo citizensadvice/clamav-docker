@@ -3,46 +3,30 @@ name: Daily rebuild of ClamAV docker image with latest definitions
 on:
   schedule:
   - cron: "0 0 * * *"
+  workflow_dispatch:
 
 jobs:
   daily_rebuild:
-
-    runs-on: ubuntu-latest
-    
+    runs-on: runs-on
+    env:
+      GITHUB_TOKEN: ${{ secrets.CITIZENSADVICE_CLAMAV_GITHUB_TOKEN }}
     steps:
-    - name: Update latest version definition
-      env:
-        GITHUB_TOKEN: ${{ secrets.CITIZENSADVICE_CLAMAV_GITHUB_TOKEN }}
-      run: |
-        # Update latest version definition script
-        cd $GITHUB_WORKSPACE
-        git init
-        git pull https://x-access-token:${GITHUB_TOKEN}@github.com/citizensadvice/clamav-docker.git
-        git checkout master
-        git remote add origin https://x-access-token:${GITHUB_TOKEN}@github.com/citizensadvice/clamav-docker.git
-        
-        # ClamAV publishes version numbers through DNS
-        # We publish that version number to the repository
-        # This is also used in the suggested local mirror update scripts
-        # https://www.clamav.net/documents/private-local-mirrors
-        regex="current\.cvd\.clamav\.net.+text.*=.*\"(.*)\""
-        if [[ $(nslookup -type=TXT current.cvd.clamav.net) =~ $regex ]]
-        then 
-          current_version=${BASH_REMATCH[1]}
-          echo "$current_version" > ./current.cvd.clamav.net.txt
-          echo "Updating to cvd $current_version"
+      - uses: actions/checkout@v5
 
-          # Configure git to push using the citizensadvice-clamav user
-          git config --global user.email "83002696+citizensadvice-clamav@users.noreply.github.com"
-          git config --global user.name "Citizens Advice GitHub Action"
+      - name: Refresh ClamAV version
+        run: echo $(dig +short current.cvd.clamav.net txt | tr -d '"') > current.cvd.clamav.net.txt
 
-          git checkout master
+      - name: Validate change
+        run: |
+          git diff current.cvd.clamav.net.txt
+          grep -E '^\d+\.\d+\.\d+:\d+:\d+:\d+:\d+:\d+:\d+:\d+$' current.cvd.clamav.net.txt || echo "Failed to match REGEX" && exit 1
 
-          # Push the change
-          git add ./current.cvd.clamav.net.txt
-          git commit -a -m "Version update to $current_version"
-          git push --set-upstream origin master
-        else
-          echo "Couldn't fetch clamav signature versions."
-          exit 1
-        fi
+
+      - name: Add, Commit & Push changes
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          author_name: "Citizens Advice GitHub Action"
+          author_email: "83002696+citizensadvice-clamav@users.noreply.github.com"
+          message: "Daily rebuild - update ClamAV definitions"
+          add: "current.cvd.clamav.net.txt"
+          push: true
