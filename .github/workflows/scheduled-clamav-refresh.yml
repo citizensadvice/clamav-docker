@@ -12,7 +12,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.CITIZENSADVICE_CLAMAV_GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Refresh ClamAV version
         run: echo $(dig +short current.cvd.clamav.net txt | tr -d '"') > current.cvd.clamav.net.txt
