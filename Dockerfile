@@ -1,4 +1,4 @@
-FROM krallin/ubuntu-tini:xenial
+FROM ubuntu:24.04
 
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -28,9 +28,9 @@ ENV MAX_SCAN_SIZE=100M
 ENV MAX_FILE_SIZE=100M
 ENV MAX_STREAM_LENGTH=100M
 
-RUN for i in `find / -user clamav`; do chown 1000 $i; done && \
-    usermod -u 1000 clamav
+RUN for i in `find / -user clamav`; do chown 1001 $i; done && \
+    usermod -u 1001 clamav
 
-USER 1000
+USER 1001
 
 CMD ["/bootstrap.sh"]
