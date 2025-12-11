@@ -1,5 +1,8 @@
 # About this Repo
 
+> [!IMPORTANT]
+> This image is no longer being used as part of the Kubernetes ClamAV solution in favour of the official image and is no longer being updated. For more information, see https://github.com/citizensadvice/clamav-config/pull/9
+
 This is the Citizens Advice ClamAV docker image. The virus definitions are updated daily. The latest docker image can be pulled from `public.ecr.aws/citizensadvice/clamav:master`
 
 To test:
